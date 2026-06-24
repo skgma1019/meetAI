@@ -51,8 +51,10 @@ def build_feature_row(record: dict[str, Any]) -> dict[str, Any]:
     filler_count_mean = _safe_float(record.get("filler_count_mean"))
     pause_count_mean = _safe_float(record.get("pause_count_mean"))
     wrong_count_mean = _safe_float(record.get("wrong_count_mean"))
-    voice_speed_mean = _safe_float(record.get("voice_speed_mean"))
-    voice_quality_score_mean = _safe_float(record.get("voice_quality_score_mean"))
+    _raw_speed = record.get("voice_speed_mean")
+    voice_speed_mean = None if _raw_speed in (None, "", "None") else float(_raw_speed)
+    _raw_quality = record.get("voice_quality_score_mean")
+    voice_quality_score_mean = None if _raw_quality in (None, "", "None") else float(_raw_quality)
     expert_grade_score_mean = _safe_float(record.get("expert_grade_score_mean"))
 
     avg_words_per_sentence = word_count / sentence_count if sentence_count else 0.0
@@ -87,8 +89,8 @@ def build_feature_row(record: dict[str, Any]) -> dict[str, Any]:
         "filler_count_mean": round(filler_count_mean, 6),
         "pause_count_mean": round(pause_count_mean, 6),
         "wrong_count_mean": round(wrong_count_mean, 6),
-        "voice_speed_mean": round(voice_speed_mean, 6),
-        "voice_quality_score_mean": round(voice_quality_score_mean, 6),
+        "voice_speed_mean": round(voice_speed_mean, 6) if voice_speed_mean is not None else None,
+        "voice_quality_score_mean": round(voice_quality_score_mean, 6) if voice_quality_score_mean is not None else None,
         "avg_words_per_sentence": round(avg_words_per_sentence, 6),
         "syllables_per_word": round(syllables_per_word, 6),
         "audible_word_ratio": round(audible_word_ratio, 6),
@@ -173,7 +175,9 @@ class LanguageBaselineModel:
 
         for feature_name in self.numeric_features:
             stats = self.numeric_stats[feature_name]
-            value = _safe_float(feature_row.get(feature_name))
+            raw = feature_row.get(feature_name)
+            # Missing features impute to training mean → normalized value = 0 (no effect)
+            value = stats["mean"] if raw in (None, "", "None") else float(raw)
             std = stats["std"] if stats["std"] > 0 else 1.0
             values.append((value - stats["mean"]) / std)
             names.append(feature_name)

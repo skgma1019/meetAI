@@ -1,6 +1,24 @@
 from __future__ import annotations
 
-from app.schemas.request import NonverbalAnalyzeRequest
+from pathlib import Path
+
+from app.analyzers.nonverbal.classifier import LABEL_NAMES, NonverbalClassifier
+from app.analyzers.nonverbal.extractor import extract_clip_features, frames_from_annotation
+from app.analyzers.nonverbal.postprocess import labels_to_event_counts
+from app.schemas.request import NonverbalAnalyzeRequest, NonverbalKeypointRequest
+
+_CLASSIFIER_PATH = Path("outputs/checkpoints/nonverbal_classifier.json")
+_classifier: NonverbalClassifier | None = None
+
+
+def _get_classifier() -> NonverbalClassifier | None:
+    global _classifier
+    if _classifier is not None:
+        return _classifier
+    if not _CLASSIFIER_PATH.exists():
+        return None
+    _classifier = NonverbalClassifier.load(_CLASSIFIER_PATH)
+    return _classifier
 
 
 def _rate_per_minute(event_count: int, duration_sec: float) -> float:
@@ -87,3 +105,49 @@ def analyze_nonverbal(payload: NonverbalAnalyzeRequest) -> dict:
         },
         "readable_feedback": readable_feedback,
     }
+
+
+def analyze_nonverbal_keypoints(payload: NonverbalKeypointRequest) -> dict:
+    """Classify each clip with the trained model, then score the aggregated event counts."""
+    classifier = _get_classifier()
+
+    label_sequence: list[str] = []
+    label_proba_list: list[dict[str, float]] = []
+
+    for clip in payload.clips:
+        frames = clip.get("frames", [])
+        features = extract_clip_features(frames)
+        if classifier is not None:
+            label = classifier.predict_label(features)
+            proba = classifier.predict_proba(features)
+        else:
+            # Fallback: no model available, label unknown
+            label = "B09"
+            proba = {}
+        label_sequence.append(label)
+        label_proba_list.append(proba)
+
+    event_counts = labels_to_event_counts(label_sequence)
+
+    # Build a synthetic NonverbalAnalyzeRequest and reuse existing scoring logic
+    from app.schemas.request import NonverbalAnalyzeRequest as _Req
+    scoring_payload = _Req(
+        context_mode=payload.context_mode,
+        clip_duration_sec=payload.clip_duration_sec,
+        **event_counts,
+    )
+    result = analyze_nonverbal(scoring_payload)
+
+    # Attach model-specific metadata
+    label_counts: dict[str, int] = {}
+    for label in label_sequence:
+        label_counts[label] = label_counts.get(label, 0) + 1
+
+    result["model_outputs"] = {
+        "classifier_available": classifier is not None,
+        "clip_count": len(label_sequence),
+        "label_counts": label_counts,
+        "label_names": {k: LABEL_NAMES[k] for k in label_counts},
+        "event_counts": event_counts,
+    }
+    return result

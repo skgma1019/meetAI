@@ -198,7 +198,15 @@ def analyze_language(payload: LanguageAnalyzeRequest) -> dict:
     baseline_model = _get_baseline_model()
     baseline_grade_score = baseline_model.predict_score(baseline_feature_row) if baseline_model else None
     baseline_100 = round((baseline_grade_score / 10.0) * 100.0, 2) if baseline_grade_score is not None else None
-    overall_score = rubric_result["overall_score"]
+
+    rubric_score = rubric_result["overall_score"]
+    if baseline_100 is not None:
+        overall_score = round(rubric_score * 0.70 + baseline_100 * 0.30, 2)
+        baseline_used_in_overall = 1
+    else:
+        overall_score = rubric_score
+        baseline_used_in_overall = 0
+
     readable_feedback = _build_readable_feedback(
         overall_score=overall_score,
         rubric_result=rubric_result,
@@ -212,10 +220,10 @@ def analyze_language(payload: LanguageAnalyzeRequest) -> dict:
         "detected_issues": rubric_result["detected_issues"],
         "extracted_features": features,
         "model_outputs": {
-            "rubric_score": rubric_result["overall_score"],
+            "rubric_score": rubric_score,
             "baseline_grade_score_10": baseline_grade_score,
             "baseline_score_100": baseline_100,
-            "baseline_used_in_overall": 0,
+            "baseline_used_in_overall": baseline_used_in_overall,
         },
         "readable_feedback": readable_feedback,
         "improved_answer": _build_improved_answer(payload, features),
