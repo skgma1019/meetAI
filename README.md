@@ -18,7 +18,6 @@
 |:---:|:---:|
 | <img src="docs/screenshots/result_nonverbal.png" width="240"/> | <img src="docs/screenshots/history.png" width="240"/> |
 
-> 📸 스크린샷은 `docs/screenshots/` 폴더에 추가해주세요.
 
 ---
 
