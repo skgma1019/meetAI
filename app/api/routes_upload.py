@@ -66,10 +66,12 @@ def _run_pose_and_gemini(
     language_result: dict,
     context_mode: str,
     pronunciation_result: dict | None = None,
-) -> tuple[dict | None, dict | None]:
-    """포즈 분석 + Gemini 피드백. 각각 실패해도 None 반환."""
+) -> tuple[dict | None, dict | None, float | None, dict | None]:
+    """포즈 분석 + 점수 융합 + Gemini 피드백. 각각 실패해도 None 반환."""
     pose_result = None
     gemini_feedback = None
+    final_score = None
+    weights = None
 
     try:
         from app.services.pose_service import analyze_video
@@ -79,13 +81,32 @@ def _run_pose_and_gemini(
         print(f"[meetAI] 포즈 분석 실패: {exc}", flush=True)
 
     if pose_result:
+        nonverbal_score_val = pose_result.get("nonverbal_score")
+        if nonverbal_score_val is not None:
+            # 비언어 점수가 있을 때만 fusion 계산
+            try:
+                from app.services.fusion_service import fuse_scores
+                fusion = fuse_scores(
+                    context_mode=context_mode,
+                    language_score=language_result.get("overall_score", 0),
+                    nonverbal_score=nonverbal_score_val,
+                    pronunciation_score_100=(pronunciation_result or {}).get("pronunciation_score_100"),
+                )
+                final_score = fusion.get("final_score")
+                weights = fusion.get("weights")
+                print(f"[meetAI] 점수 융합 완료: final_score={final_score}", flush=True)
+            except Exception as exc:
+                print(f"[meetAI] 점수 융합 실패: {exc}", flush=True)
+        else:
+            print("[meetAI] 포즈 분석 결과 없음 → fusion 생략", flush=True)
+
         try:
             from app.services.feedback_service import build_feedback_with_gemini
             gemini_feedback = build_feedback_with_gemini(
                 context_mode=context_mode,
                 language_result=language_result,
                 pose_result=pose_result,
-                final_score=language_result.get("overall_score", 0),
+                final_score=final_score or language_result.get("overall_score", 0),
                 pronunciation_result=pronunciation_result,
             )
             if gemini_feedback:
@@ -93,7 +114,7 @@ def _run_pose_and_gemini(
         except Exception as exc:
             print(f"[meetAI] Gemini 피드백 실패: {exc}", flush=True)
 
-    return pose_result, gemini_feedback
+    return pose_result, gemini_feedback, final_score, weights
 
 
 @router.post(
@@ -159,8 +180,10 @@ async def upload_audio(
         # ── 포즈·Gemini (영상만) ─────────────────────────────────
         pose_result: dict | None = None
         gemini_feedback: dict | None = None
+        final_score: float | None = None
+        fusion_weights: dict | None = None
         if is_video:
-            pose_result, gemini_feedback = _run_pose_and_gemini(
+            pose_result, gemini_feedback, final_score, fusion_weights = _run_pose_and_gemini(
                 video_path=tmp_str,
                 language_result=language_result,
                 context_mode=context_mode,
@@ -194,6 +217,8 @@ async def upload_audio(
         pronunciation_score=pronunciation_result.get("pronunciation_score"),
         pronunciation_score_100=pronunciation_result.get("pronunciation_score_100"),
         pronunciation_grade=pronunciation_result.get("pronunciation_grade"),
+        final_score=final_score,
+        weights=fusion_weights,
     )
 
 

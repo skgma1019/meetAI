@@ -57,5 +57,12 @@ export async function analyzeFull(file, { contextMode, expectedDurationSec, role
     throw new Error(err.detail || `통합 분석 오류 (${res.status})`)
   }
   const fullResult = await res.json()
-  return { ...fullResult, transcript: audioData.transcript, audio_duration_sec: audioData.audio_duration_sec }
+  return {
+    ...fullResult,
+    transcript: audioData.transcript,
+    audio_duration_sec: audioData.audio_duration_sec,
+    pronunciation_score: audioData.pronunciation_score,
+    pronunciation_score_100: audioData.pronunciation_score_100,
+    pronunciation_grade: audioData.pronunciation_grade,
+  }
 }

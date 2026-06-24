@@ -61,6 +61,8 @@ class AudioAnalysisResponse(BaseModel):
     pronunciation_score: int | None = Field(default=None, description="발음 점수 1~5")
     pronunciation_score_100: float | None = Field(default=None, description="발음 점수 0~100 환산")
     pronunciation_grade: str | None = Field(default=None, description="발음 등급 (매우 좋음 ~ 많은 연습 필요)")
+    final_score: float | None = Field(default=None, description="언어·비언어·발음 융합 최종 점수 (영상 업로드 시)")
+    weights: dict[str, float] | None = Field(default=None, description="점수 융합에 사용된 가중치")
 
 
 class FullAnalysisResponse(BaseModel):
