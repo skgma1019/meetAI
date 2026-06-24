@@ -25,15 +25,15 @@ export default function AnalyzingPage() {
     <div className="page-wrap" style={{ justifyContent: 'center' }}>
       <div className="screen">
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--muted)', fontFamily: 'var(--font-accent)', fontSize: 15 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--muted)', fontFamily: 'var(--font-accent)', fontSize: 27 }}>
             <span>분석</span>
             <span>~10초</span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
             <div className="spinner-lg" />
-            <div style={{ fontSize: 23, fontWeight: 700 }}>분석하고 있어요…</div>
-            <div style={{ fontSize: 13, color: 'var(--muted)', textAlign: 'center', maxWidth: 260 }}>
+            <div style={{ fontSize: 41, fontWeight: 700 }}>분석하고 있어요…</div>
+            <div style={{ fontSize: 23, color: 'var(--muted)', textAlign: 'center', maxWidth: 260 }}>
               처음 실행 시 AI 모델 로딩으로 30초~1분 소요될 수 있습니다
             </div>
           </div>
@@ -58,8 +58,8 @@ export default function AnalyzingPage() {
                     <div className="step-icon-pending" />
                   )}
                   <div>
-                    <div style={{ fontSize: 16, fontWeight: isDone || isActive ? 700 : 400 }}>{s.label}</div>
-                    <div style={{ fontSize: 13, color: 'var(--muted)' }}>{s.sub}</div>
+                    <div style={{ fontSize: 29, fontWeight: isDone || isActive ? 700 : 400 }}>{s.label}</div>
+                    <div style={{ fontSize: 23, color: 'var(--muted)' }}>{s.sub}</div>
                   </div>
                 </div>
               )

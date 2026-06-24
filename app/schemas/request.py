@@ -89,6 +89,10 @@ class FullAnalyzeRequest(BaseModel):
     language: LanguageAnalyzeRequest = Field(..., description="언어 분석 입력값")
     nonverbal: NonverbalAnalyzeRequest = Field(..., description="비언어 분석 입력값")
     history_id: str | None = Field(default=None, description="기존 history 레코드 ID (업데이트용)")
+    pronunciation_score_100: float | None = Field(
+        default=None, ge=0, le=100,
+        description="발음 점수 0~100 (upload/audio에서 반환된 값을 전달)",
+    )
 
 
 # Keypoint: [x, y, z] — 3개 좌표값

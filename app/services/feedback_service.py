@@ -2,6 +2,7 @@ from __future__ import annotations
 
 
 def build_feedback(context_mode: str, language_result: dict, nonverbal_result: dict, final_score: float) -> dict:
+    """룰 기반 피드백 (Gemini 폴백용)."""
     deductions: list[str] = []
     recommendations: list[str] = []
 
@@ -33,3 +34,27 @@ def build_feedback(context_mode: str, language_result: dict, nonverbal_result: d
         "recommendations": recommendations[:3],
         "summary": summary,
     }
+
+
+def build_feedback_with_gemini(
+    context_mode: str,
+    language_result: dict,
+    pose_result: dict,
+    final_score: float,
+    pronunciation_result: dict | None = None,
+) -> dict | None:
+    """
+    Gemini 피드백 시도 → 실패 시 None 반환.
+    호출자가 None이면 룰 기반으로 처리.
+    """
+    try:
+        from app.services.gemini_service import generate_feedback
+        return generate_feedback(
+            pose_result=pose_result,
+            language_result=language_result,
+            context_mode=context_mode,
+            pronunciation_result=pronunciation_result,
+        )
+    except Exception as exc:
+        print(f"[meetAI] Gemini 서비스 오류: {exc}", flush=True)
+        return None

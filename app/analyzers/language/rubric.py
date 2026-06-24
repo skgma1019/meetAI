@@ -15,8 +15,11 @@ def score_language_features(features: dict, context_mode: str) -> dict:
     body_marker_score = float(features.get("body_marker_score") or 0)
     outro_marker_score = float(features.get("outro_marker_score") or 0)
 
-    structure_signal = (intro_marker_score + body_marker_score + outro_marker_score) / 3
-    structure_score = _clip(structure_signal * 100)
+    # AI Hub 공적말하기 전문가 평가 기준: 본론 40% + 도입 30% + 결론 30%
+    # 각 값은 0.0/0.40/0.60/0.80/1.00 (5등급 척도)
+    structure_score = _clip(
+        (intro_marker_score * 0.30 + body_marker_score * 0.40 + outro_marker_score * 0.30) * 100
+    )
 
     clarity_penalty = abs(avg_sentence_length - 16) * 2.2
     clarity_score = _clip(100 - clarity_penalty - repetition_ratio * 120)

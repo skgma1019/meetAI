@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import os
+from pathlib import Path
+
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile
 
 from app.core.auth import get_optional_user
@@ -7,11 +10,12 @@ from app.core.supabase_client import get_supabase
 from app.schemas.request import ContextMode, LanguageAnalyzeRequest
 from app.schemas.response import AudioAnalysisResponse, LanguageAnalysisResponse
 from app.services.language_service import analyze_language
-from app.services.stt_service import transcribe_bytes
+from app.services.stt_service import transcribe_bytes, transcribe, _TEMP_DIR
 
 router = APIRouter(prefix="/upload", tags=["upload"])
 
 _ALLOWED_SUFFIXES = {".mp3", ".mp4", ".wav", ".m4a", ".webm", ".ogg", ".flac"}
+_VIDEO_SUFFIXES   = {".mp4", ".webm"}
 
 
 def _save_audio_history(user_id: str, mode: str, transcript: str, language_result: dict, audio_duration_sec: float | None) -> str | None:
@@ -40,10 +44,62 @@ def _save_audio_history(user_id: str, mode: str, transcript: str, language_resul
         return None
 
 
+def _run_pronunciation(avg_logprob: float | None) -> dict:
+    """Whisper avg_logprob → 발음 점수 변환. 실패 시 None 필드 dict 반환."""
+    try:
+        from app.services.pronunciation_service import score_pronunciation_from_logprob
+        result = score_pronunciation_from_logprob(avg_logprob)
+        print(
+            f"[meetAI] 발음 채점 완료: score={result.get('pronunciation_score')} "
+            f"({result.get('pronunciation_grade')}, logprob={avg_logprob:.3f})" if avg_logprob is not None
+            else "[meetAI] 발음 채점: avg_logprob 없음",
+            flush=True,
+        )
+        return result
+    except Exception as exc:
+        print(f"[meetAI] 발음 채점 실패: {exc}", flush=True)
+        return {"pronunciation_score": None, "pronunciation_score_100": None, "pronunciation_grade": None}
+
+
+def _run_pose_and_gemini(
+    video_path: str,
+    language_result: dict,
+    context_mode: str,
+    pronunciation_result: dict | None = None,
+) -> tuple[dict | None, dict | None]:
+    """포즈 분석 + Gemini 피드백. 각각 실패해도 None 반환."""
+    pose_result = None
+    gemini_feedback = None
+
+    try:
+        from app.services.pose_service import analyze_video
+        pose_result = analyze_video(video_path)
+        print(f"[meetAI] 포즈 분석 완료: nonverbal_score={pose_result.get('nonverbal_score')}", flush=True)
+    except Exception as exc:
+        print(f"[meetAI] 포즈 분석 실패: {exc}", flush=True)
+
+    if pose_result:
+        try:
+            from app.services.feedback_service import build_feedback_with_gemini
+            gemini_feedback = build_feedback_with_gemini(
+                context_mode=context_mode,
+                language_result=language_result,
+                pose_result=pose_result,
+                final_score=language_result.get("overall_score", 0),
+                pronunciation_result=pronunciation_result,
+            )
+            if gemini_feedback:
+                print("[meetAI] Gemini 피드백 생성 완료", flush=True)
+        except Exception as exc:
+            print(f"[meetAI] Gemini 피드백 실패: {exc}", flush=True)
+
+    return pose_result, gemini_feedback
+
+
 @router.post(
     "/audio",
     response_model=AudioAnalysisResponse,
-    summary="오디오 업로드 → STT → 언어 분석",
+    summary="오디오/영상 업로드 → STT → 언어·발음 분석 (영상은 포즈·Gemini 포함)",
 )
 async def upload_audio(
     file: UploadFile,
@@ -64,28 +120,57 @@ async def upload_audio(
     if not data:
         raise HTTPException(status_code=400, detail="빈 파일입니다.")
 
+    is_video = suffix in _VIDEO_SUFFIXES
+
+    # 모든 파일을 temp로 관리 (STT + 발음 채점 + 포즈 분석 공유)
+    tmp_path = _TEMP_DIR / f"upload_{os.getpid()}_{id(data)}{suffix}"
     try:
-        stt_result = transcribe_bytes(data, suffix=suffix)
-    except RuntimeError as exc:
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"전사 중 오류가 발생했습니다: {exc}") from exc
+        tmp_path.write_bytes(data)
+        tmp_str = str(tmp_path)
 
-    transcript: str = stt_result["text"]
-    if not transcript:
-        raise HTTPException(status_code=422, detail="전사 결과가 비어 있습니다. 음성이 포함된 파일인지 확인하세요.")
+        # ── STT ─────────────────────────────────────────────────
+        try:
+            stt_result = transcribe(tmp_str)
+        except RuntimeError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"전사 중 오류: {exc}") from exc
 
-    keyword_list = [k.strip() for k in keywords.split(",") if k.strip()]
-    analysis_payload = LanguageAnalyzeRequest(
-        transcript=transcript,
-        context_mode=context_mode,
-        expected_duration_sec=expected_duration_sec,
-        role=role,
-        keywords=keyword_list,
-    )
-    language_result = analyze_language(analysis_payload)
-    audio_duration_sec = stt_result.get("duration_sec")
+        transcript: str = stt_result["text"]
+        if not transcript:
+            raise HTTPException(status_code=422, detail="전사 결과가 비어 있습니다. 음성이 포함된 파일인지 확인하세요.")
 
+        audio_duration_sec = stt_result.get("duration_sec")
+        avg_logprob = stt_result.get("avg_logprob")
+
+        # ── 언어 분석 ────────────────────────────────────────────
+        keyword_list = [k.strip() for k in keywords.split(",") if k.strip()]
+        language_result = analyze_language(LanguageAnalyzeRequest(
+            transcript=transcript,
+            context_mode=context_mode,
+            expected_duration_sec=expected_duration_sec,
+            role=role,
+            keywords=keyword_list,
+        ))
+
+        # ── 발음 채점 (Whisper 신뢰도 재활용, 추가 모델 없음) ────
+        pronunciation_result = _run_pronunciation(avg_logprob)
+
+        # ── 포즈·Gemini (영상만) ─────────────────────────────────
+        pose_result: dict | None = None
+        gemini_feedback: dict | None = None
+        if is_video:
+            pose_result, gemini_feedback = _run_pose_and_gemini(
+                video_path=tmp_str,
+                language_result=language_result,
+                context_mode=context_mode,
+                pronunciation_result=pronunciation_result,
+            )
+
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+    # ── 히스토리 저장 ─────────────────────────────────────────────
     history_id: str | None = None
     if user:
         history_id = _save_audio_history(
@@ -101,6 +186,14 @@ async def upload_audio(
         audio_duration_sec=audio_duration_sec,
         language=LanguageAnalysisResponse(**language_result),
         history_id=history_id,
+        posture_score=pose_result.get("posture_score") if pose_result else None,
+        gaze_score=pose_result.get("gaze_score") if pose_result else None,
+        gesture_score=pose_result.get("gesture_score") if pose_result else None,
+        nonverbal_score=pose_result.get("nonverbal_score") if pose_result else None,
+        gemini_feedback=gemini_feedback,
+        pronunciation_score=pronunciation_result.get("pronunciation_score"),
+        pronunciation_score_100=pronunciation_result.get("pronunciation_score_100"),
+        pronunciation_grade=pronunciation_result.get("pronunciation_grade"),
     )
 
 

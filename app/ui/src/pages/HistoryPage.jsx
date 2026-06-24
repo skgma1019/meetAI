@@ -11,7 +11,7 @@ function ScoreCircle({ score }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       flexShrink: 0,
     }}>
-      <span style={{ fontSize: 15, fontWeight: 700, color, fontFamily: 'var(--font-accent)' }}>{s}</span>
+      <span style={{ fontSize: 27, fontWeight: 700, color, fontFamily: 'var(--font-accent)' }}>{s}</span>
     </div>
   )
 }
@@ -104,7 +104,7 @@ export default function HistoryPage({ onBack, onViewResult }) {
           <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div className="nav-bar">
               <button className="nav-back" onClick={closeDetail}>‹</button>
-              <span style={{ fontWeight: 700, fontSize: 16 }}>분석 상세</span>
+              <span style={{ fontWeight: 700, fontSize: 29 }}>분석 상세</span>
               <div style={{ width: 30 }} />
             </div>
 
@@ -124,13 +124,13 @@ export default function HistoryPage({ onBack, onViewResult }) {
                 {/* 기본 정보 */}
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <span className="chip">{modeLabel(detail.mode)}</span>
-                  <span style={{ fontSize: 13, color: 'var(--muted)' }}>{fmtDate(detail.created_at)}</span>
+                  <span style={{ fontSize: 23, color: 'var(--muted)' }}>{fmtDate(detail.created_at)}</span>
                   <ScoreCircle score={detail.overall_score} />
                 </div>
 
                 {/* 전사문 */}
                 {detail.transcript && (
-                  <div className="card-inner" style={{ fontSize: 13, color: '#444', lineHeight: 1.7, maxHeight: 120, overflowY: 'auto' }}>
+                  <div className="card-inner" style={{ fontSize: 23, color: '#444', lineHeight: 1.7, maxHeight: 120, overflowY: 'auto' }}>
                     {detail.transcript}
                   </div>
                 )}
@@ -138,8 +138,8 @@ export default function HistoryPage({ onBack, onViewResult }) {
                 {/* 개선 답변 */}
                 {detail.improved_answer && (
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, color: 'var(--blue)' }}>AI 개선 답변</div>
-                    <div className="card-inner" style={{ fontSize: 13, color: '#444', lineHeight: 1.7, maxHeight: 120, overflowY: 'auto' }}>
+                    <div style={{ fontSize: 23, fontWeight: 700, marginBottom: 6, color: 'var(--blue)' }}>AI 개선 답변</div>
+                    <div className="card-inner" style={{ fontSize: 23, color: '#444', lineHeight: 1.7, maxHeight: 120, overflowY: 'auto' }}>
                       {detail.improved_answer}
                     </div>
                   </div>
@@ -182,7 +182,7 @@ export default function HistoryPage({ onBack, onViewResult }) {
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div className="nav-bar">
             <button className="nav-back" onClick={onBack}>‹</button>
-            <span style={{ fontWeight: 700, fontSize: 16 }}>분석 기록</span>
+            <span style={{ fontWeight: 700, fontSize: 29 }}>분석 기록</span>
             <div style={{ width: 30 }} />
           </div>
 
@@ -193,16 +193,16 @@ export default function HistoryPage({ onBack, onViewResult }) {
           )}
 
           {error && (
-            <div style={{ background: '#fff3f0', border: '1.5px solid var(--orange)', borderRadius: 8, padding: '10px 12px', fontSize: 14, color: 'var(--orange)' }}>
+            <div style={{ background: '#fff3f0', border: '1.5px solid var(--orange)', borderRadius: 8, padding: '10px 12px', fontSize: 25, color: 'var(--orange)' }}>
               {error}
             </div>
           )}
 
           {!loading && records.length === 0 && !error && (
             <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--muted)' }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>📂</div>
+              <div style={{ fontSize: 58, marginBottom: 8 }}>📂</div>
               <div>아직 분석 기록이 없어요.</div>
-              <div style={{ fontSize: 13, marginTop: 4 }}>녹음하고 분석해보세요!</div>
+              <div style={{ fontSize: 23, marginTop: 4 }}>녹음하고 분석해보세요!</div>
             </div>
           )}
 
@@ -225,15 +225,15 @@ export default function HistoryPage({ onBack, onViewResult }) {
               <ScoreCircle score={r.overall_score} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                  <span className="chip" style={{ fontSize: 11, padding: '1px 7px' }}>{modeLabel(r.mode)}</span>
-                  {r.video_path && <span style={{ fontSize: 11, color: 'var(--blue)' }}>● 영상</span>}
+                  <span className="chip" style={{ fontSize: 20, padding: '1px 7px' }}>{modeLabel(r.mode)}</span>
+                  {r.video_path && <span style={{ fontSize: 20, color: 'var(--blue)' }}>● 영상</span>}
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{fmtDate(r.created_at)}</div>
+                <div style={{ fontSize: 22, color: 'var(--muted)' }}>{fmtDate(r.created_at)}</div>
               </div>
               <button
                 onClick={(e) => handleDelete(r.id, e)}
                 disabled={deleting === r.id}
-                style={{ background: 'none', border: 'none', color: '#ccc', cursor: 'pointer', fontSize: 18, padding: '4px 6px' }}
+                style={{ background: 'none', border: 'none', color: '#ccc', cursor: 'pointer', fontSize: 32, padding: '4px 6px' }}
               >
                 ✕
               </button>

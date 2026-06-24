@@ -64,7 +64,7 @@ body {
   width: 100%;
   padding: 13px;
   font-family: var(--font);
-  font-size: 18px;
+  font-size: 32px;
   font-weight: 700;
   text-align: center;
   border: 2px solid var(--border);
@@ -84,7 +84,7 @@ body {
   width: 100%;
   padding: 10px 11px;
   font-family: var(--font);
-  font-size: 16px;
+  font-size: 29px;
   border: 1.5px dashed var(--muted);
   border-radius: 8px;
   background: #faf9f5;
@@ -101,7 +101,7 @@ body {
   border: 1.5px solid var(--border);
   border-radius: 20px;
   padding: 3px 11px;
-  font-size: 13px;
+  font-size: 23px;
   background: var(--text);
   color: #fff;
 }
@@ -110,7 +110,7 @@ body {
   border: 1.5px solid var(--light-border);
   border-radius: 18px;
   padding: 5px 14px;
-  font-size: 14px;
+  font-size: 25px;
   cursor: pointer;
   background: var(--card-bg);
   font-family: var(--font);
@@ -130,7 +130,7 @@ body {
   margin-bottom: 12px;
 }
 .nav-back {
-  font-size: 22px;
+  font-size: 40px;
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 6px;
@@ -160,7 +160,7 @@ body {
   align-items: center;
   gap: 9px;
 }
-.score-bar-label { width: 76px; font-size: 14px; color: #555; flex: none; }
+.score-bar-label { white-space: nowrap; font-size: 25px; color: #555; flex: none; }
 .score-bar-track {
   flex: 1;
   height: 14px;
@@ -170,7 +170,7 @@ body {
   overflow: hidden;
 }
 .score-bar-fill { height: 100%; border-radius: 8px 0 0 8px; transition: width 0.8s ease; }
-.score-bar-num { width: 30px; text-align: right; font-family: var(--font-accent); font-size: 20px; }
+.score-bar-num { min-width: 48px; text-align: right; font-family: var(--font-accent); font-size: 36px; }
 
 /* ── issue item ── */
 .issue-item {
@@ -189,7 +189,7 @@ body {
   color: var(--orange);
   border-radius: 12px;
   padding: 1px 10px;
-  font-size: 13px;
+  font-size: 23px;
   white-space: nowrap;
 }
 
@@ -259,7 +259,7 @@ body {
   background: var(--blue);
   border: 2px solid var(--border);
   display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 14px;
+  color: #fff; font-size: 25px;
 }
 .step-icon-pending {
   width: 24px; height: 24px; flex: none;
@@ -276,16 +276,22 @@ body {
   margin: 0 auto;
 }
 
+/* ── app shell ── */
+.app-shell {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
 /* ── responsive: desktop 2-col result ── */
 @media (min-width: 768px) {
   .result-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    max-width: 800px;
   }
   .result-full { grid-column: 1 / -1; }
-  .screen { max-width: 800px; }
+  .screen { max-width: 100%; }
 }
 
 /* ── keyframes ── */

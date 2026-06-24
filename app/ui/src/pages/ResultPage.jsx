@@ -54,7 +54,7 @@ export default function ResultPage({ result, mode, setup, onRestart, onExit }) {
       <div className="screen" style={{ maxWidth: 800 }}>
         {/* Header Navigation */}
         <div className="nav-bar" style={{ marginBottom: 16 }}>
-          <button className="nav-back" onClick={onExit} style={{ fontSize: 16, border: '1.5px solid var(--border)', borderRadius: '8px', padding: '4px 10px', background: '#fff', boxShadow: 'var(--shadow-btn)' }}>
+          <button className="nav-back" onClick={onExit} style={{ fontSize: 29, border: '1.5px solid var(--border)', borderRadius: '8px', padding: '4px 10px', background: '#fff', boxShadow: 'var(--shadow-btn)' }}>
             처음으로
           </button>
           <span className="chip" style={{ background: isFullAnalysis ? 'var(--blue)' : 'var(--orange)' }}>
@@ -66,7 +66,7 @@ export default function ResultPage({ result, mode, setup, onRestart, onExit }) {
         <div className="result-grid">
           {/* Column 1: Overall Score & Metrics Chart/List */}
           <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ fontSize: 20, fontWeight: 700, borderBottom: '2px dashed var(--light-border)', paddingBottom: 8 }}>
+            <div style={{ fontSize: 36, fontWeight: 700, borderBottom: '2px dashed var(--light-border)', paddingBottom: 8 }}>
               📊 종합 진단
             </div>
 
@@ -81,18 +81,18 @@ export default function ResultPage({ result, mode, setup, onRestart, onExit }) {
                 boxShadow: 'var(--shadow-card)',
                 flexShrink: 0
               }}>
-                <span style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 700, lineHeight: 1 }}>{isFullAnalysis ? '최종 점수' : '종합 점수'}</span>
-                <span style={{ fontSize: 32, fontWeight: 700, fontFamily: 'var(--font-accent)', color: 'var(--orange)', lineHeight: 1 }}>
-                  {finalScore}
+                <span style={{ fontSize: 22, color: 'var(--muted)', fontWeight: 700, lineHeight: 1 }}>{isFullAnalysis ? '최종 점수' : '종합 점수'}</span>
+                <span style={{ fontSize: 58, fontWeight: 700, fontFamily: 'var(--font-accent)', color: 'var(--orange)', lineHeight: 1 }}>
+                  {Math.round(finalScore)}
                 </span>
               </div>
               <div style={{ flex: 1 }}>
                 {isFullAnalysis && result.weights && (
-                  <div style={{ fontSize: 12, color: 'var(--blue)', fontWeight: 700, marginBottom: 2 }}>
+                  <div style={{ fontSize: 22, color: 'var(--blue)', fontWeight: 700, marginBottom: 2 }}>
                     반영 가중치: 언어 {Math.round(result.weights.language * 100)}% · 비언어 {Math.round(result.weights.nonverbal * 100)}%
                   </div>
                 )}
-                <p style={{ fontSize: 15, color: '#333', lineHeight: 1.4, fontWeight: 700 }}>
+                <p style={{ fontSize: 27, color: '#333', lineHeight: 1.4, fontWeight: 700 }}>
                   {summaryText || '분석이 성공적으로 완료되었습니다.'}
                 </p>
               </div>
@@ -172,38 +172,38 @@ export default function ResultPage({ result, mode, setup, onRestart, onExit }) {
 
           {/* Column 2: Strengths & Weaknesses / Tips */}
           <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ fontSize: 20, fontWeight: 700, borderBottom: '2px dashed var(--light-border)', paddingBottom: 8 }}>
+            <div style={{ fontSize: 36, fontWeight: 700, borderBottom: '2px dashed var(--light-border)', paddingBottom: 8 }}>
               💡 상세 코칭 피드백
             </div>
 
             {/* Strengths */}
             <div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--blue)', marginBottom: 6 }}>
+              <div style={{ fontSize: 29, fontWeight: 700, color: 'var(--blue)', marginBottom: 6 }}>
                 ✓ 이런 점이 좋았어요!
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {strengths.length > 0 ? strengths.map((s, i) => (
-                  <div key={i} className="card-inner" style={{ padding: '8px 12px', fontSize: 14.5, background: 'var(--blue-light)', borderLeft: '3px solid var(--blue)' }}>
+                  <div key={i} className="card-inner" style={{ padding: '8px 12px', fontSize: 26, background: 'var(--blue-light)', borderLeft: '3px solid var(--blue)' }}>
                     {s}
                   </div>
                 )) : (
-                  <div style={{ fontSize: 14, color: 'var(--muted)', paddingLeft: 8 }}>감지된 강점이 없습니다.</div>
+                  <div style={{ fontSize: 25, color: 'var(--muted)', paddingLeft: 8 }}>감지된 강점이 없습니다.</div>
                 )}
               </div>
             </div>
 
             {/* Weaknesses */}
             <div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--orange)', marginBottom: 6 }}>
+              <div style={{ fontSize: 29, fontWeight: 700, color: 'var(--orange)', marginBottom: 6 }}>
                 ⚠ 이런 점은 아쉬워요…
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {weaknesses.length > 0 ? weaknesses.map((w, i) => (
-                  <div key={i} className="card-inner" style={{ padding: '8px 12px', fontSize: 14.5, background: '#fff9f6', borderLeft: '3px solid var(--orange)' }}>
+                  <div key={i} className="card-inner" style={{ padding: '8px 12px', fontSize: 26, background: '#fff9f6', borderLeft: '3px solid var(--orange)' }}>
                     {w}
                   </div>
                 )) : (
-                  <div style={{ fontSize: 14, color: 'var(--muted)', paddingLeft: 8 }}>특별히 아쉬운 점이 감지되지 않았습니다.</div>
+                  <div style={{ fontSize: 25, color: 'var(--muted)', paddingLeft: 8 }}>특별히 아쉬운 점이 감지되지 않았습니다.</div>
                 )}
               </div>
             </div>
@@ -212,10 +212,10 @@ export default function ResultPage({ result, mode, setup, onRestart, onExit }) {
             {(!isFullAnalysis || activeTab === 'language') ? (
               langIssues.length > 0 && (
                 <div>
-                  <div style={{ fontSize: 14, color: '#555', fontWeight: 700, marginBottom: 6 }}>감지된 언어 표현 문제</div>
+                  <div style={{ fontSize: 25, color: '#555', fontWeight: 700, marginBottom: 6 }}>감지된 언어 표현 문제</div>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     {langIssues.map((issue, i) => (
-                      <span key={i} className="issue-badge" style={{ fontFamily: 'var(--font)', fontSize: 13, background: '#fff' }}>
+                      <span key={i} className="issue-badge" style={{ fontFamily: 'var(--font)', fontSize: 23, background: '#fff' }}>
                         {issue}
                       </span>
                     ))}
@@ -225,10 +225,10 @@ export default function ResultPage({ result, mode, setup, onRestart, onExit }) {
             ) : (
               nonverbalIssues.length > 0 && (
                 <div>
-                  <div style={{ fontSize: 14, color: '#555', fontWeight: 700, marginBottom: 6 }}>감지된 태도/동작 문제</div>
+                  <div style={{ fontSize: 25, color: '#555', fontWeight: 700, marginBottom: 6 }}>감지된 태도/동작 문제</div>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     {nonverbalIssues.map((issue, i) => (
-                      <span key={i} className="issue-badge" style={{ fontFamily: 'var(--font)', fontSize: 13, background: '#fff', borderColor: 'var(--orange)', color: 'var(--orange)' }}>
+                      <span key={i} className="issue-badge" style={{ fontFamily: 'var(--font)', fontSize: 23, background: '#fff', borderColor: 'var(--orange)', color: 'var(--orange)' }}>
                         {issue}
                       </span>
                     ))}
@@ -240,10 +240,10 @@ export default function ResultPage({ result, mode, setup, onRestart, onExit }) {
             {/* Recommended Next Actions */}
             {nextActions.length > 0 && (
               <div style={{ marginTop: 'auto', paddingTop: 10, borderTop: '1.5px dashed var(--light-border)' }}>
-                <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <div style={{ fontSize: 27, fontWeight: 700, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 4 }}>
                   <span>🎯</span> 다음 말하기 실습을 위한 팁
                 </div>
-                <ul style={{ paddingLeft: 18, fontSize: 14, lineHeight: 1.5, color: '#444' }}>
+                <ul style={{ paddingLeft: 18, fontSize: 25, lineHeight: 1.5, color: '#444' }}>
                   {nextActions.map((action, i) => (
                     <li key={i} style={{ marginBottom: 4 }}>{action}</li>
                   ))}
@@ -254,17 +254,17 @@ export default function ResultPage({ result, mode, setup, onRestart, onExit }) {
 
           {/* Column 3: Full Width - Transcript & Improved Answer */}
           <div className="card result-full" style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 16 }}>
-            <div style={{ fontSize: 20, fontWeight: 700, borderBottom: '2px dashed var(--light-border)', paddingBottom: 8 }}>
+            <div style={{ fontSize: 36, fontWeight: 700, borderBottom: '2px dashed var(--light-border)', paddingBottom: 8 }}>
               📝 내 답변과 AI 추천 답변 비교
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
               {/* Transcript */}
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, color: '#555' }}>
+                <div style={{ fontSize: 27, fontWeight: 700, marginBottom: 6, color: '#555' }}>
                   내가 한 답변 내용 (Whisper STT 전사문)
                 </div>
-                <div className="card-inner" style={{ maxHeight: 180, overflowY: 'auto', fontSize: 14.5, lineHeight: 1.6, background: '#faf9f5', whiteSpace: 'pre-wrap' }}>
+                <div className="card-inner" style={{ maxHeight: 180, overflowY: 'auto', fontSize: 26, lineHeight: 1.6, background: '#faf9f5', whiteSpace: 'pre-wrap' }}>
                   {transcript || '녹음이 인식되지 않았습니다.'}
                 </div>
               </div>
@@ -273,14 +273,14 @@ export default function ResultPage({ result, mode, setup, onRestart, onExit }) {
               {improvedAnswer && (
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--blue)' }}>
+                    <span style={{ fontSize: 27, fontWeight: 700, color: 'var(--blue)' }}>
                       ✨ AI가 제안하는 개선된 답변
                     </span>
                     <button
                       onClick={handleCopy}
                       style={{
                         padding: '3px 8px',
-                        fontSize: 12,
+                        fontSize: 22,
                         fontFamily: 'var(--font)',
                         border: '1.5px solid var(--border)',
                         borderRadius: '6px',
@@ -293,7 +293,7 @@ export default function ResultPage({ result, mode, setup, onRestart, onExit }) {
                       {copied ? '✓ 복사됨' : '복사하기'}
                     </button>
                   </div>
-                  <div className="card-inner" style={{ fontSize: 14.5, lineHeight: 1.6, background: '#f5f8fc', border: '1.5px dashed var(--blue)', whiteSpace: 'pre-wrap' }}>
+                  <div className="card-inner" style={{ fontSize: 26, lineHeight: 1.6, background: '#f5f8fc', border: '1.5px dashed var(--blue)', whiteSpace: 'pre-wrap' }}>
                     {improvedAnswer}
                   </div>
                 </div>

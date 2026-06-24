@@ -35,7 +35,7 @@ const LABEL_MAP = {
 export default function RadarChart({ metrics, color = '#3b6ea5', label = '평가 점수' }) {
   if (!metrics || !Array.isArray(metrics) || metrics.length === 0) {
     return (
-      <div style={{ height: 260, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', fontSize: 14 }}>
+      <div style={{ height: 260, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', fontSize: 25 }}>
         데이터가 없습니다.
       </div>
     )
@@ -75,7 +75,7 @@ export default function RadarChart({ metrics, color = '#3b6ea5', label = '평가
         pointLabels: {
           font: {
             family: 'Gaegu',
-            size: 14,
+            size: 25,
             weight: 'bold',
           },
           color: '#2b2b2b', // var(--text)

@@ -12,7 +12,7 @@ export default function EntryPage({ onStart }) {
     <div className="page-wrap">
       <div className="screen">
         <div className="card" style={{ minHeight: 540, display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', color: '#b6b5ab', fontFamily: 'var(--font-accent)', fontSize: 15 }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', color: '#b6b5ab', fontFamily: 'var(--font-accent)', fontSize: 27 }}>
             <span style={{ display: 'flex', gap: 3 }}>
               {[0,1,2].map(i => <span key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: '#b6b5ab', display: 'inline-block' }} />)}
             </span>
@@ -31,17 +31,17 @@ export default function EntryPage({ onStart }) {
             </div>
 
             <div>
-              <div style={{ fontSize: 44, fontWeight: 700, lineHeight: 1 }}>면보아</div>
-              <div style={{ fontFamily: 'var(--font-accent)', fontSize: 26, color: 'var(--blue)', fontWeight: 700 }}>meetAI</div>
+              <div style={{ fontSize: 79, fontWeight: 700, lineHeight: 1 }}>면보아</div>
+              <div style={{ fontFamily: 'var(--font-accent)', fontSize: 47, color: 'var(--blue)', fontWeight: 700 }}>meetAI</div>
             </div>
 
-            <div style={{ fontSize: 17, color: '#666', lineHeight: 1.5, maxWidth: 240 }}>
+            <div style={{ fontSize: 31, color: '#666', lineHeight: 1.5, maxWidth: 240 }}>
               말하기를 분석하고<br />더 나은 답변을 제안해드려요
             </div>
           </div>
 
           <div style={{
-            fontSize: 13, color: 'var(--muted)', textAlign: 'center',
+            fontSize: 23, color: 'var(--muted)', textAlign: 'center',
             border: '1.5px dashed var(--light-border)',
             borderRadius: 8, padding: '7px 12px',
           }}>

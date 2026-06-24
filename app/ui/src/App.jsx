@@ -107,8 +107,10 @@ export default function App() {
 
   if (authLoading) {
     return (
-      <div className="page-wrap" style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <div className="spinner-lg" />
+      <div className="app-shell">
+        <div className="page-wrap" style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <div className="spinner-lg" />
+        </div>
       </div>
     )
   }
@@ -116,22 +118,24 @@ export default function App() {
   // 이메일 인증 완료 화면
   if (emailVerified && !user) {
     return (
-      <div className="page-wrap" style={{ justifyContent: 'center' }}>
-        <div className="screen">
-          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16, textAlign: 'center', alignItems: 'center' }}>
-            <div style={{ fontSize: 56 }}>✅</div>
-            <div style={{ fontSize: 22, fontWeight: 700 }}>이메일 인증 완료!</div>
-            <div style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.7 }}>
-              이메일 인증이 완료되었습니다.<br />
-              이제 로그인할 수 있습니다.
+      <div className="app-shell">
+        <div className="page-wrap" style={{ justifyContent: 'center' }}>
+          <div className="screen">
+            <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16, textAlign: 'center', alignItems: 'center' }}>
+              <div style={{ fontSize: 101 }}>✅</div>
+              <div style={{ fontSize: 40, fontWeight: 700 }}>이메일 인증 완료!</div>
+              <div style={{ fontSize: 25, color: 'var(--muted)', lineHeight: 1.7 }}>
+                이메일 인증이 완료되었습니다.<br />
+                이제 로그인할 수 있습니다.
+              </div>
+              <button
+                className="btn btn-primary"
+                style={{ width: '100%' }}
+                onClick={() => { setEmailVerified(false); setAuthPage('login') }}
+              >
+                로그인하러 가기
+              </button>
             </div>
-            <button
-              className="btn btn-primary"
-              style={{ width: '100%' }}
-              onClick={() => { setEmailVerified(false); setAuthPage('login') }}
-            >
-              로그인하러 가기
-            </button>
           </div>
         </div>
       </div>
@@ -139,20 +143,25 @@ export default function App() {
   }
 
   if (!user) {
-    return authPage === 'register'
-      ? <RegisterPage onLogin={() => setAuthPage('login')} />
-      : <LoginPage onRegister={() => setAuthPage('register')} />
+    return (
+      <div className="app-shell">
+        {authPage === 'register'
+          ? <RegisterPage onLogin={() => setAuthPage('login')} />
+          : <LoginPage onRegister={() => setAuthPage('register')} />
+        }
+      </div>
+    )
   }
 
   // 유저 정보 헤더 (항상 표시)
   const username = (user.user_metadata || {}).username || user.email?.split('@')[0] || '유저'
 
   return (
-    <>
+    <div className="app-shell">
       {/* 상단 네비게이션 바 */}
       {page !== 'analyzing' && (
         <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
+          position: 'sticky', top: 0, zIndex: 200,
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '8px 16px',
           background: 'rgba(250, 249, 244, 0.95)',
@@ -160,23 +169,23 @@ export default function App() {
           backdropFilter: 'blur(6px)',
         }}>
           <span
-            style={{ fontFamily: 'var(--font-accent)', fontSize: 18, color: 'var(--blue)', cursor: 'pointer' }}
+            style={{ fontFamily: 'var(--font-accent)', fontSize: 32, color: 'var(--blue)', cursor: 'pointer' }}
             onClick={reset}
           >
             meetAI
           </span>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <span style={{ fontSize: 12, color: 'var(--muted)' }}>{username}</span>
+            <span style={{ fontSize: 22, color: 'var(--muted)' }}>{username}</span>
             <button
               className="btn"
-              style={{ fontSize: 12, padding: '4px 10px', border: '1.5px solid var(--border)' }}
+              style={{ fontSize: 22, padding: '4px 10px', border: '1.5px solid var(--border)' }}
               onClick={() => go('history')}
             >
               기록
             </button>
             <button
               className="btn"
-              style={{ fontSize: 12, padding: '4px 10px', border: '1.5px solid var(--border)', color: 'var(--muted)' }}
+              style={{ fontSize: 22, padding: '4px 10px', border: '1.5px solid var(--border)', color: 'var(--muted)' }}
               onClick={handleLogout}
             >
               로그아웃
@@ -185,8 +194,8 @@ export default function App() {
         </div>
       )}
 
-      {/* 페이지 콘텐츠 (헤더 높이만큼 패딩) */}
-      <div style={{ paddingTop: page !== 'analyzing' ? 48 : 0 }}>
+      {/* 페이지 콘텐츠 */}
+      <>
         {page === 'entry' && <EntryPage onStart={() => go('mode')} />}
         {page === 'mode' && <ModeSelectPage onSelect={handleModeSelect} onBack={() => go('entry')} />}
         {page === 'setup' && <SetupPage mode={mode} onNext={handleSetup} onBack={() => go('mode')} />}
@@ -213,7 +222,7 @@ export default function App() {
             }}
           />
         )}
-      </div>
-    </>
+      </>
+    </div>
   )
 }

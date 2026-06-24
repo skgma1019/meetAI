@@ -157,7 +157,7 @@ export default function RecordPage({ mode, setup, error, onAnalyze, onBack }) {
             <div style={{ width: 30 }} />
           </div>
 
-          <div style={{ fontSize: 23, fontWeight: 700 }}>녹음하기</div>
+          <div style={{ fontSize: 41, fontWeight: 700 }}>녹음하기</div>
 
           {/* Camera Preview (if nonverbal is enabled) */}
           {setup.enableNonverbal && (
@@ -182,7 +182,7 @@ export default function RecordPage({ mode, setup, error, onAnalyze, onBack }) {
                   style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scaleX(-1)' }}
                 />
               ) : (
-                <div style={{ color: '#fff', fontSize: 14, textAlign: 'center', padding: 20 }}>
+                <div style={{ color: '#fff', fontSize: 25, textAlign: 'center', padding: 20 }}>
                   {isRecording ? '카메라를 불러오는 중...' : '녹음 시작 시 카메라가 활성화됩니다.'}
                 </div>
               )}
@@ -205,7 +205,7 @@ export default function RecordPage({ mode, setup, error, onAnalyze, onBack }) {
                     background: 'rgba(43,43,43,0.85)',
                     padding: '3px 8px',
                     borderRadius: 4,
-                    fontSize: 11,
+                    fontSize: 20,
                     fontWeight: 700,
                     position: 'absolute',
                     top: 8,
@@ -238,7 +238,7 @@ export default function RecordPage({ mode, setup, error, onAnalyze, onBack }) {
               </div>
               <button
                 className="btn"
-                style={{ border: '1.5px solid var(--border)', background: '#fff', fontSize: 14 }}
+                style={{ border: '1.5px solid var(--border)', background: '#fff', fontSize: 25 }}
                 onClick={handleDownloadVideo}
               >
                 ↓ 영상 다운로드 (recording.webm)
@@ -272,20 +272,20 @@ export default function RecordPage({ mode, setup, error, onAnalyze, onBack }) {
               </button>
             </div>
 
-            <div style={{ fontFamily: 'var(--font-accent)', fontSize: 28, lineHeight: 1 }}>
+            <div style={{ fontFamily: 'var(--font-accent)', fontSize: 50, lineHeight: 1 }}>
               {fmtTime(duration)}{' '}
-              <span style={{ fontSize: 17, color: 'var(--muted)' }}>/ 목표 {fmtTime(targetSec)}</span>
+              <span style={{ fontSize: 31, color: 'var(--muted)' }}>/ 목표 {fmtTime(targetSec)}</span>
             </div>
 
             <Waveform active={isRecording} />
 
-            <div style={{ fontSize: 13, color: isRecording ? 'var(--orange)' : 'var(--muted)' }}>
+            <div style={{ fontSize: 23, color: isRecording ? 'var(--orange)' : 'var(--muted)' }}>
               {isRecording ? '● 녹음 중 — 또박또박 말해보세요' : audioFile ? `✓ ${audioFile.name}` : '● 버튼을 눌러 녹음 시작'}
             </div>
           </div>
 
           {/* divider */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--muted)', fontSize: 13 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--muted)', fontSize: 23 }}>
             <span style={{ flex: 1, borderTop: '1.5px dashed var(--light-border)' }} />
             또는
             <span style={{ flex: 1, borderTop: '1.5px dashed var(--light-border)' }} />
@@ -308,19 +308,19 @@ export default function RecordPage({ mode, setup, error, onAnalyze, onBack }) {
             />
             {audioFile && !isRecording ? (
               <>
-                <div style={{ fontSize: 15, color: 'var(--blue)', fontWeight: 700 }}>✓ {audioFile.name}</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)' }}>다른 파일 선택하려면 클릭</div>
+                <div style={{ fontSize: 27, color: 'var(--blue)', fontWeight: 700 }}>✓ {audioFile.name}</div>
+                <div style={{ fontSize: 22, color: 'var(--muted)' }}>다른 파일 선택하려면 클릭</div>
               </>
             ) : (
               <>
-                <div style={{ fontSize: 15, color: '#777' }}>미디어 파일 끌어다 놓기</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)' }}>mp3 · wav · mp4 · m4a · webm</div>
+                <div style={{ fontSize: 27, color: '#777' }}>미디어 파일 끌어다 놓기</div>
+                <div style={{ fontSize: 22, color: 'var(--muted)' }}>mp3 · wav · mp4 · m4a · webm</div>
               </>
             )}
           </div>
 
           {error && (
-            <div style={{ background: '#fff3f0', border: '1.5px solid var(--orange)', borderRadius: 8, padding: '10px 12px', fontSize: 14, color: 'var(--orange)' }}>
+            <div style={{ background: '#fff3f0', border: '1.5px solid var(--orange)', borderRadius: 8, padding: '10px 12px', fontSize: 25, color: 'var(--orange)' }}>
               ⚠ {error}
             </div>
           )}

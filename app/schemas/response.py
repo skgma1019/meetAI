@@ -40,11 +40,27 @@ class NonverbalAnalysisResponse(BaseModel):
     model_outputs: dict | None = Field(default=None, description="모델 분류 결과 (키포인트 분석 시에만 포함)")
 
 
+class GeminiFeedback(BaseModel):
+    overall_comment: str = Field(..., description="전체 총평")
+    strengths: list[str] = Field(..., description="잘한 점")
+    improvements: list[str] = Field(..., description="개선할 점")
+    nonverbal_feedback: str = Field(..., description="비언어 표현 피드백")
+    language_feedback: str = Field(..., description="언어 표현 피드백")
+
+
 class AudioAnalysisResponse(BaseModel):
     transcript: str = Field(..., description="Whisper STT 전사문")
     audio_duration_sec: float | None = Field(default=None, description="오디오 길이(초)")
     language: LanguageAnalysisResponse = Field(..., description="언어 분석 결과")
     history_id: str | None = Field(default=None, description="저장된 분석 기록 ID (로그인 시)")
+    posture_score: float | None = Field(default=None, description="자세 안정성 점수 (영상 업로드 시)")
+    gaze_score: float | None = Field(default=None, description="시선 안정성 점수 (영상 업로드 시)")
+    gesture_score: float | None = Field(default=None, description="손동작 적절성 점수 (영상 업로드 시)")
+    nonverbal_score: float | None = Field(default=None, description="비언어 종합 점수 (영상 업로드 시)")
+    gemini_feedback: GeminiFeedback | None = Field(default=None, description="Gemini AI 종합 피드백")
+    pronunciation_score: int | None = Field(default=None, description="발음 점수 1~5")
+    pronunciation_score_100: float | None = Field(default=None, description="발음 점수 0~100 환산")
+    pronunciation_grade: str | None = Field(default=None, description="발음 등급 (매우 좋음 ~ 많은 연습 필요)")
 
 
 class FullAnalysisResponse(BaseModel):

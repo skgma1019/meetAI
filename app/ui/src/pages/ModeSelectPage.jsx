@@ -40,10 +40,10 @@ const ModeCard = ({ icon, title, subtitle, onClick, style }) => (
       {icon}
     </div>
     <div style={{ flex: 1 }}>
-      <div style={{ fontSize: 21, fontWeight: 700 }}>{title}</div>
-      <div style={{ fontSize: 15, color: '#888' }}>{subtitle}</div>
+      <div style={{ fontSize: 38, fontWeight: 700 }}>{title}</div>
+      <div style={{ fontSize: 27, color: '#888' }}>{subtitle}</div>
     </div>
-    <span style={{ fontSize: 26, color: 'var(--muted)' }}>›</span>
+    <span style={{ fontSize: 47, color: 'var(--muted)' }}>›</span>
   </button>
 )
 
@@ -61,8 +61,8 @@ export default function ModeSelectPage({ onSelect, onBack }) {
           </div>
 
           <div style={{ marginTop: 4 }}>
-            <div style={{ fontSize: 25, fontWeight: 700 }}>무엇을 연습할까요?</div>
-            <div style={{ fontSize: 16, color: '#888' }}>모드를 선택하세요</div>
+            <div style={{ fontSize: 45, fontWeight: 700 }}>무엇을 연습할까요?</div>
+            <div style={{ fontSize: 29, color: '#888' }}>모드를 선택하세요</div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 6 }}>

@@ -10,10 +10,15 @@ class Settings:
     app_env: str = os.getenv("APP_ENV", "development")
     app_host: str = os.getenv("APP_HOST", "0.0.0.0")
     app_port: int = int(os.getenv("APP_PORT", "8000"))
-    presentation_language_weight: float = float(os.getenv("DEFAULT_PRESENTATION_LANGUAGE_WEIGHT", "0.6"))
-    presentation_nonverbal_weight: float = float(os.getenv("DEFAULT_PRESENTATION_NONVERBAL_WEIGHT", "0.4"))
-    interview_language_weight: float = float(os.getenv("DEFAULT_INTERVIEW_LANGUAGE_WEIGHT", "0.7"))
-    interview_nonverbal_weight: float = float(os.getenv("DEFAULT_INTERVIEW_NONVERBAL_WEIGHT", "0.3"))
+
+    # 언어 + 비언어 + 발음 가중치 (합계 = 1.0)
+    presentation_language_weight: float    = float(os.getenv("PRESENTATION_LANGUAGE_WEIGHT",    "0.60"))
+    presentation_nonverbal_weight: float   = float(os.getenv("PRESENTATION_NONVERBAL_WEIGHT",   "0.25"))
+    presentation_pronunciation_weight: float = float(os.getenv("PRESENTATION_PRONUNCIATION_WEIGHT", "0.15"))
+
+    interview_language_weight: float       = float(os.getenv("INTERVIEW_LANGUAGE_WEIGHT",       "0.60"))
+    interview_nonverbal_weight: float      = float(os.getenv("INTERVIEW_NONVERBAL_WEIGHT",      "0.25"))
+    interview_pronunciation_weight: float  = float(os.getenv("INTERVIEW_PRONUNCIATION_WEIGHT",  "0.15"))
 
 
 settings = Settings()

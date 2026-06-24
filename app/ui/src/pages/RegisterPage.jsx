@@ -11,7 +11,7 @@ const GoogleIcon = () => (
 )
 
 const Divider = () => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--muted)', fontSize: 13 }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--muted)', fontSize: 23 }}>
     <span style={{ flex: 1, borderTop: '1.5px dashed var(--light-border)' }} />
     또는
     <span style={{ flex: 1, borderTop: '1.5px dashed var(--light-border)' }} />
@@ -59,7 +59,7 @@ export default function RegisterPage({ onLogin }) {
     border: '2px solid var(--border)',
     borderRadius: 8,
     padding: '10px 12px',
-    fontSize: 15,
+    fontSize: 27,
     fontFamily: 'var(--font)',
     outline: 'none',
     background: '#faf9f4',
@@ -70,9 +70,9 @@ export default function RegisterPage({ onLogin }) {
       <div className="page-wrap" style={{ justifyContent: 'center' }}>
         <div className="screen">
           <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: 40 }}>✉</div>
-            <div style={{ fontSize: 20, fontWeight: 700 }}>이메일을 확인해주세요</div>
-            <div style={{ fontSize: 14, color: 'var(--muted)' }}>
+            <div style={{ fontSize: 72 }}>✉</div>
+            <div style={{ fontSize: 36, fontWeight: 700 }}>이메일을 확인해주세요</div>
+            <div style={{ fontSize: 25, color: 'var(--muted)' }}>
               <b>{email}</b>로 인증 메일을 보냈습니다.<br />
               이메일 인증 후 로그인할 수 있습니다.
             </div>
@@ -88,15 +88,15 @@ export default function RegisterPage({ onLogin }) {
       <div className="screen">
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 36, fontFamily: 'var(--font-accent)', color: 'var(--blue)', marginBottom: 4 }}>meetAI</div>
-            <div style={{ fontSize: 14, color: 'var(--muted)' }}>새 계정 만들기</div>
+            <div style={{ fontSize: 65, fontFamily: 'var(--font-accent)', color: 'var(--blue)', marginBottom: 4 }}>meetAI</div>
+            <div style={{ fontSize: 25, color: 'var(--muted)' }}>새 계정 만들기</div>
           </div>
 
-          <div style={{ fontSize: 20, fontWeight: 700 }}>회원가입</div>
+          <div style={{ fontSize: 36, fontWeight: 700 }}>회원가입</div>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--muted)' }}>사용자명</label>
+              <label style={{ fontSize: 23, fontWeight: 600, color: 'var(--muted)' }}>사용자명</label>
               <input
                 type="text"
                 value={username}
@@ -107,7 +107,7 @@ export default function RegisterPage({ onLogin }) {
               />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--muted)' }}>이메일</label>
+              <label style={{ fontSize: 23, fontWeight: 600, color: 'var(--muted)' }}>이메일</label>
               <input
                 type="email"
                 value={email}
@@ -118,7 +118,7 @@ export default function RegisterPage({ onLogin }) {
               />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--muted)' }}>비밀번호 (6자 이상)</label>
+              <label style={{ fontSize: 23, fontWeight: 600, color: 'var(--muted)' }}>비밀번호 (6자 이상)</label>
               <input
                 type="password"
                 value={password}
@@ -130,7 +130,7 @@ export default function RegisterPage({ onLogin }) {
             </div>
 
             {error && (
-              <div style={{ background: '#fff3f0', border: '1.5px solid var(--orange)', borderRadius: 8, padding: '10px 12px', fontSize: 13, color: 'var(--orange)' }}>
+              <div style={{ background: '#fff3f0', border: '1.5px solid var(--orange)', borderRadius: 8, padding: '10px 12px', fontSize: 23, color: 'var(--orange)' }}>
                 {error}
               </div>
             )}
@@ -157,7 +157,7 @@ export default function RegisterPage({ onLogin }) {
               padding: '11px 16px',
               background: '#fff',
               fontFamily: 'var(--font)',
-              fontSize: 15,
+              fontSize: 27,
               fontWeight: 700,
               cursor: 'pointer',
               boxShadow: '2px 2px 0 rgba(43,43,43,0.08)',
@@ -171,11 +171,11 @@ export default function RegisterPage({ onLogin }) {
             {googleLoading ? '이동 중…' : 'Google로 계속하기'}
           </button>
 
-          <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--muted)' }}>
+          <div style={{ textAlign: 'center', fontSize: 23, color: 'var(--muted)' }}>
             이미 계정이 있으신가요?{' '}
             <button
               onClick={onLogin}
-              style={{ background: 'none', border: 'none', color: 'var(--blue)', cursor: 'pointer', fontFamily: 'var(--font)', fontSize: 13, fontWeight: 700, textDecoration: 'underline' }}
+              style={{ background: 'none', border: 'none', color: 'var(--blue)', cursor: 'pointer', fontFamily: 'var(--font)', fontSize: 23, fontWeight: 700, textDecoration: 'underline' }}
             >
               로그인
             </button>

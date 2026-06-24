@@ -102,6 +102,7 @@ async def analyze_full_route(payload: FullAnalyzeRequest, user=Depends(get_optio
         context_mode=payload.context_mode,
         language_score=language_result["overall_score"],
         nonverbal_score=nonverbal_result["overall_score"],
+        pronunciation_score_100=payload.pronunciation_score_100,
     )
     feedback = build_feedback(
         context_mode=payload.context_mode,

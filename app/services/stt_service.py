@@ -89,7 +89,11 @@ def transcribe(audio_path: str | Path) -> dict[str, Any]:
     text: str = result.get("text", "").strip()
     segments: list = result.get("segments", [])
     duration_sec: float | None = segments[-1]["end"] if segments else None
-    return {"text": text, "duration_sec": duration_sec}
+    # avg_logprob: Whisper 전사 신뢰도, 발음 평가에 재사용 (범위 ≈ -2.0~0.0)
+    avg_logprob: float | None = (
+        sum(s["avg_logprob"] for s in segments) / len(segments) if segments else None
+    )
+    return {"text": text, "duration_sec": duration_sec, "avg_logprob": avg_logprob}
 
 
 def transcribe_bytes(data: bytes, suffix: str = ".wav") -> dict[str, Any]:
